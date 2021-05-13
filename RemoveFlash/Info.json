@@ -1,0 +1,9 @@
+{
+  "Id": "RemoveFlash",
+  "DisplayName": "RemoveFlash",
+  "Author": "HYONSU",
+  "Version": "0.0.1",
+  "AssemblyName": "RemoveFlash.dll",
+  "EntryMethod": "RemoveFlash.Main.Load",
+  "Repository": ""
+}
