@@ -2,7 +2,7 @@
   "Id": "RemoveFlash",
   "DisplayName": "RemoveFlash",
   "Author": "HYONSU",
-  "Version": "0.0.2",
+  "Version": "0.0.3",
   "AssemblyName": "RemoveFlash.dll",
   "EntryMethod": "RemoveFlash.Main.Load",
   "Repository": ""
