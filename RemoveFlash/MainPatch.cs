@@ -3,9 +3,19 @@ using HarmonyLib;
 using UnityEngine;
 
 namespace RemoveFlash.MainPatch {
+    [HarmonyPatch(typeof(scrFlash), "Flash")]
+    internal static class RemoveFailFlash {
+        private static bool Prefix() {
+            if (!Main.Settings.FailWhiteFlash) return true;
+            if (scrController.CheckStateIs("Fail")) return false;
+            return true;
+        }
+    }
+    
     [HarmonyPatch(typeof(scrFlash), "OnDamage")]
     internal static class RemoveDamageFlash {
         private static bool Prefix() {
+            if (!Main.Settings.FailRedFlash) return true;
             return false;
         }
     }
@@ -13,6 +23,8 @@ namespace RemoveFlash.MainPatch {
     [HarmonyPatch(typeof(ffxCheckpoint), "doEffect")]
     internal static class RemoveCheckpointFlash {
         private static bool Prefix(ffxCheckpoint __instance) {
+            if (!Main.Settings.CheckpointFlash) return true;
+            
             if (GCS.speedTrialMode)
                 return false;
             GCS.checkpointNum = __instance.GetComponent<scrFloor>().seqID + __instance.checkpointTileOffset;
@@ -26,6 +38,8 @@ namespace RemoveFlash.MainPatch {
     [HarmonyPatch(typeof(scrController), "OnLandOnPortal")]
     internal static class RemoveClearFlash {
         private static bool Prefix(scrController __instance, int portalDestination, string portalArguments) {
+            if (!Main.Settings.ClearFlash) return true;
+            
             var disableCongratsMessage = 
                 (Boolean) AccessTools.Field(__instance.GetType(), "disableCongratsMessage").GetValue(__instance);
             

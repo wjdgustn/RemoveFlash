@@ -14,10 +14,14 @@ namespace RemoveFlash {
         internal static UnityModManager.ModEntry Mod;
         private static Harmony _harmony;
         internal static bool IsEnabled { get; private set; }
+        internal static MainSettings Settings { get; private set; }
 
         private static void Load(UnityModManager.ModEntry modEntry) {
             Mod = modEntry;
             Mod.OnToggle = OnToggle;
+            Settings = UnityModManager.ModSettings.Load<MainSettings>(modEntry);
+            Mod.OnGUI = Settings.OnGUI;
+            Mod.OnSaveGUI = Settings.OnSaveGUI;
             
             #if DEBUG
             Mod.OnUnload = Stop;
@@ -40,8 +44,6 @@ namespace RemoveFlash {
 
         private static bool Stop(UnityModManager.ModEntry modEntry) {
             _harmony.UnpatchAll(Mod.Info.Id);
-            _harmony = null;
-            
             #if RELEASE
             _harmony = null;
             #endif
