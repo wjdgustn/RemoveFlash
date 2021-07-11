@@ -6,9 +6,11 @@ using UnityEngine.SceneManagement;
 using UnityModManagerNet;
 
 namespace RemoveFlash {
+    #if DEBUG
+    [EnableReloading]
+    #endif
+    
     internal static class Main {
-        public static bool _called = false;
-
         internal static UnityModManager.ModEntry Mod;
         private static Harmony _harmony;
         internal static bool IsEnabled { get; private set; }
@@ -16,13 +18,17 @@ namespace RemoveFlash {
         private static void Load(UnityModManager.ModEntry modEntry) {
             Mod = modEntry;
             Mod.OnToggle = OnToggle;
+            
+            #if DEBUG
+            Mod.OnUnload = Stop;
+            #endif
         }
 
         private static bool OnToggle(UnityModManager.ModEntry modEntry, bool value) {
             IsEnabled = value;
 
             if (value) Start();
-            else Stop();
+            else Stop(modEntry);
 
             return true;
         }
@@ -32,9 +38,15 @@ namespace RemoveFlash {
             _harmony.PatchAll(Assembly.GetExecutingAssembly());
         }
 
-        private static void Stop() {
+        private static bool Stop(UnityModManager.ModEntry modEntry) {
             _harmony.UnpatchAll(Mod.Info.Id);
             _harmony = null;
+            
+            #if RELEASE
+            _harmony = null;
+            #endif
+
+            return true;
         }
     }
 }
