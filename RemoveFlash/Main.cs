@@ -15,6 +15,8 @@ namespace RemoveFlash {
         private static Harmony _harmony;
         internal static bool IsEnabled { get; private set; }
         internal static MainSettings Settings { get; private set; }
+        
+        internal static bool disableFlashOnce = false;
 
         private static void Load(UnityModManager.ModEntry modEntry) {
             Mod = modEntry;
